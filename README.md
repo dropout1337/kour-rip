@@ -1,5 +1,5 @@
 # Kour.rip
-- Basic exploits for kour.io
+![image](https://cheap.estrogen.supply/KqRdlnllrD.gif)
 
 ## Installation
 1. You will need to install [Tampermonkey](https://chromewebstore.google.com/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en).
