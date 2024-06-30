@@ -29,7 +29,7 @@ class Kour {
         // What features you want enabled
         this.config = {
             Invisible: true,
-            InstantKill: false,
+            InstantKill: true,
         }
 
         // Current packet count (not used, just visually)
