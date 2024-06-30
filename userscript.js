@@ -30,7 +30,7 @@ class Kour {
         this.config = {
             Invisible: true,
             InstantKill: false,
-            DisableMarketing: false,
+            DisableMarketing: true,
         }
 
         // Current packet count (not used, just visually)
