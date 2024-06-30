@@ -9,16 +9,16 @@
 // ==/UserScript==
 
 const Signatures = {
-    Ping:              "f3 07 01 00 00", // Filter
-    Pong:              "f3 06 01 01 01", // Filter
-    AnotherPing:       "f3 04 e2 03 e3", // Filter
+    ping:              "f3 07 01 00 00", // Filter
+    pong:              "f3 06 01 01 01", // Filter
+    anotherPing:       "f3 04 e2 03 e3", // Filter
 
-    CreateGame:        "f3 02 e3 03 ff 07 06", // Create Game / Party (Can be used to change partyId)
-    UpdateState:       "f3 02 fd 02 f4 03 c8", // Insta-kill
-    DamageTaken:       "f3 04 c8 02 f5 15 04", // Invisibility
+    createGame:        "f3 02 e3 03 ff 07 06", // Create Game / Party (Can be used to change partyId)
+    updateState:       "f3 02 fd 02 f4 03 c8", // Insta-kill
+    damageTaken:       "f3 04 c8 02 f5 15 04", // Invisibility
 
-    ConnectStarts:     "f3 02 e", // Connect (start)
-    ConnectEnds:       "f1 1c e8 1c bf 0b 23" // Connect (end)
+    connectStarts:     "f3 02 e", // Connect (start)
+    connectEnds:       "f1 1c e8 1c bf 0b 23" // Connect (end)
 }
 
 class Kour {
@@ -30,7 +30,7 @@ class Kour {
         this.config = {
             Invisible: true,
             InstantKill: false,
-            DisableMarketing: true,
+            DisableMarketing: false,
         }
 
         // Current packet count (not used, just visually)
@@ -101,11 +101,11 @@ class Kour {
             let stringHexArray = hexArray.join(" ");
 
             if (stringHexArray == "") return onmessage.call(socket, event);
-            if (stringHexArray.startsWith(Signatures.Ping)) return onmessage.call(socket, event);
-            if (stringHexArray.startsWith(Signatures.AnotherPing)) return onmessage.call(socket, event);
+            if (stringHexArray.startsWith(Signatures.ping)) return onmessage.call(socket, event);
+            if (stringHexArray.startsWith(Signatures.anotherPing)) return onmessage.call(socket, event);
             
             // If the event is a Damage/Shoot event ignore it.
-            if (stringHexArray.startsWith(Signatures.DamageTaken) && this.config.Invisible) {
+            if (stringHexArray.startsWith(Signatures.damageTaken) && this.config.Invisible) {
                 return;
             }
 
@@ -129,13 +129,13 @@ class Kour {
             let stringHexArray = hexArray.join(" ");
 
             if (stringHexArray == "") return send.call(socket, data);
-            if (stringHexArray.startsWith(Signatures.Pong)) return send.call(socket, data);
+            if (stringHexArray.startsWith(Signatures.pong)) return send.call(socket, data);
 
-            if (stringHexArray.startsWith(Signatures.CreateGame)) {
+            if (stringHexArray.startsWith(Signatures.createGame)) {
                 let partyId = this.hexArrayToString(hexArray.slice(7, 13));
                 console.debug("%c => ", "background:#7F7;color:#000", "Creating game:", partyId);
                 return send.call(socket, data);
-            } else if (stringHexArray.startsWith(Signatures.UpdateState)  && this.config.InstantKill) { // Repeat state packets (movement, crouch, jump, shoot, switch weapon), causes the game to send 40 of the same packet. So if we shoot we actually send 40 damage packets instead of 1.
+            } else if (stringHexArray.startsWith(Signatures.updateState)  && this.config.InstantKill) { // Repeat state packets (movement, crouch, jump, shoot, switch weapon), causes the game to send 40 of the same packet. So if we shoot we actually send 40 damage packets instead of 1.
                 console.debug("%c => ", "background:#7F7;color:#000", "State repeated.");
 
                 for (let i = 0; i < 40; i++) {
@@ -144,7 +144,7 @@ class Kour {
 
                 this.marketing();
                 return send.call(socket, data);
-            } else if (stringHexArray.startsWith(Signatures.ConnectStarts) && stringHexArray.endsWith(Signatures.ConnectEnds)) {
+            } else if (stringHexArray.startsWith(Signatures.connectStarts) && stringHexArray.endsWith(Signatures.connectEnds)) {
                 console.debug("%c => ", "background:#7F7;color:#000", "Connecting to game.", this.hexArrayToString(hexArray));
                 return send.call(socket, data);
             }
