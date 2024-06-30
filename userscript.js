@@ -29,7 +29,7 @@ class Kour {
         // What features you want enabled
         this.config = {
             Invisible: true,
-            InstantKill: true,
+            InstantKill: false,
         }
 
         // Current packet count (not used, just visually)
@@ -70,6 +70,10 @@ class Kour {
         return str;
     }
 
+    marketing() {
+        kourMessager.send("<sprite=0> <color=#F8CEFF>github.com<color=white>/<color=#F8CEFF>dropout1337<color=white>/<color=#F8CEFF>kour-rip<color=white> <sprite=0>")
+    }
+
     /**
     * Hooks into the WebSocket instance to intercept and log WebSocket messages and sends.
     *
@@ -97,7 +101,11 @@ class Kour {
             if (stringHexArray.startsWith(Signatures.AnotherPing)) return onmessage.call(socket, event);
             
             // If the event is a Damage/Shoot event ignore it.
-            if (stringHexArray.startsWith(Signatures.DamageTaken) && this.config.Invisible) return;
+            if (stringHexArray.startsWith(Signatures.DamageTaken) && this.config.Invisible) {
+                return;
+            }
+
+            this.marketing();
 
             console.debug("%c <= ", "background:#FF6A19;color:#000", JSON.stringify({
                 "hex_array": stringHexArray,
@@ -130,10 +138,10 @@ class Kour {
                     send.call(socket, data);
                 }
 
+                this.marketing();
                 return send.call(socket, data);
             } else if (stringHexArray.startsWith(Signatures.ConnectStarts) && stringHexArray.endsWith(Signatures.ConnectEnds)) {
                 console.debug("%c => ", "background:#7F7;color:#000", "Connecting to game.", this.hexArrayToString(hexArray));
-
                 return send.call(socket, data);
             }
 
@@ -226,7 +234,57 @@ class Kour {
     }
 }
 
+class Message {
+    constructor() {
+        this.msgArray = [243, 2, 253, 3, 246, 3, 1, 244, 34, 245, 23, 1, 7];
+        this.sockets = kourInstance.sockets;
+    }
+
+    encodeDec(text) {
+        const decArray = [];
+
+        for (let i = 0; i < text.length; i++) {
+            decArray.push(text.charCodeAt(i));
+        }
+
+        return decArray;
+    }
+
+    createMessage(verified, clan, clanColor, nameColor, name, msgColor, msg) {
+        let msgStr = `<color=${clanColor}>${clan} </color><color=${nameColor}>${name}<color=${nameColor}>: <color=${msgColor}>${msg}`;
+        if (verified) {
+            msgStr = "<sprite=0>" + msgStr;
+        }
+
+        return msgStr
+    }
+
+    send(msg) {
+        let socket = this.sockets[this.sockets.length - 1];
+
+        let msgArray = [...this.msgArray];
+
+        let savedlength = msg.length;
+        let amount = Math.floor(savedlength/128);
+        let strLength = [];
+        if (savedlength > 128) {
+            strLength.push(128 + (savedlength % 128));
+            strLength.push(amount);
+        } else {
+            strLength.push(savedlength);
+        }
+
+        msgArray.push(...strLength);
+        msgArray.push(...this.encodeDec(msg));
+
+        socket.send(new Uint8Array(msgArray));
+    }
+}
+
 const kourInstance = new Kour();
+const kourMessager = new Message();
+
 unsafeWindow.kourInstance = kourInstance;
+unsafeWindow.kourMessager = kourMessager;
 
 window.addEventListener("load", kourInstance.watermark);
