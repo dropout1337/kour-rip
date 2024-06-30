@@ -30,6 +30,7 @@ class Kour {
         this.config = {
             Invisible: true,
             InstantKill: false,
+            DisableMarketing: false,
         }
 
         // Current packet count (not used, just visually)
@@ -70,8 +71,11 @@ class Kour {
         return str;
     }
 
+    /**
+    * Sends messages in the chat to help promote kour.rip :3
+    */
     marketing() {
-        kourMessager.send("<sprite=0> <color=#F8CEFF>github.com<color=white>/<color=#F8CEFF>dropout1337<color=white>/<color=#F8CEFF>kour-rip<color=white> <sprite=0>")
+        if (!this.config.DisableMarketing) kourMessager.send("<sprite=0> <color=#F8CEFF>github.com<color=white>/<color=#F8CEFF>dropout1337<color=white>/<color=#F8CEFF>kour-rip<color=white> <sprite=0>")
     }
 
     /**
@@ -240,6 +244,12 @@ class Message {
         this.sockets = kourInstance.sockets;
     }
 
+    /**
+    * Converts a given string into an array of decimal ASCII codes.
+    * 
+    * @param {string} text - The input text to be encoded.
+    * @returns {number[]} An array of decimal ASCII codes representing each character in the input text.
+    */
     encodeDec(text) {
         const decArray = [];
 
@@ -250,15 +260,11 @@ class Message {
         return decArray;
     }
 
-    createMessage(verified, clan, clanColor, nameColor, name, msgColor, msg) {
-        let msgStr = `<color=${clanColor}>${clan} </color><color=${nameColor}>${name}<color=${nameColor}>: <color=${msgColor}>${msg}`;
-        if (verified) {
-            msgStr = "<sprite=0>" + msgStr;
-        }
-
-        return msgStr
-    }
-
+    /**
+    * Sends a message through the last socket in the sockets array.
+    * 
+    * @param {string} msg - The message to be sent.
+    */
     send(msg) {
         let socket = this.sockets[this.sockets.length - 1];
 
