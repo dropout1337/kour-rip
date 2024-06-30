@@ -1,6 +1,9 @@
 # Kour.rip
 ![image](https://cheap.estrogen.supply/KqRdlnllrD.gif)
 
+# Discord
+https://discord.gg/HkyBAdgN
+
 ## Installation
 1. You will need to install [Tampermonkey](https://chromewebstore.google.com/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en).
 2. Open Tampermonkey
