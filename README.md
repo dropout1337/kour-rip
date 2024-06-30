@@ -13,3 +13,7 @@
 4. Paste in the code from userscript.js
 
     <img src="https://cheap.estrogen.supply/Nn7Vs7VAeN.png" alt="Replace content" width="400" height="200">
+
+
+## Post
+https://medium.com/@floralleafs/kour-io-a-exploiters-playground-630f1d0eb6e0
