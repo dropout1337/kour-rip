@@ -2,7 +2,7 @@
 ![image](https://cheap.estrogen.supply/KqRdlnllrD.gif)
 
 # Discord
-https://discord.gg/HkyBAdgN
+[Official Discord](https://discord.gg/qPcdGRVcAY)
 
 ## Installation
 1. You will need to install [Tampermonkey](https://chromewebstore.google.com/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en).
