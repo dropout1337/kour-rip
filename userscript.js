@@ -29,8 +29,7 @@ class Kour {
         // What features you want enabled
         this.config = {
             Invisible: true,
-            InstantKill: false,
-            DisableMarketing: true,
+            InstantKill: false
         }
 
         // Current packet count (not used, just visually)
@@ -72,13 +71,6 @@ class Kour {
     }
 
     /**
-    * Sends messages in the chat to help promote kour.rip :3
-    */
-    marketing() {
-        if (!this.config.DisableMarketing) kourMessager.send("<sprite=0> <color=#F8CEFF>github.com<color=white>/<color=#F8CEFF>dropout1337<color=white>/<color=#F8CEFF>kour-rip<color=white> <sprite=0>")
-    }
-
-    /**
     * Hooks into the WebSocket instance to intercept and log WebSocket messages and sends.
     *
     * @param {WebSocket} socket - The WebSocket instance to hook into.
@@ -108,8 +100,6 @@ class Kour {
             if (stringHexArray.startsWith(Signatures.damageTaken) && this.config.Invisible) {
                 return;
             }
-
-            this.marketing();
 
             console.debug("%c <= ", "background:#FF6A19;color:#000", JSON.stringify({
                 "hex_array": stringHexArray,
@@ -142,7 +132,6 @@ class Kour {
                     send.call(socket, data);
                 }
 
-                this.marketing();
                 return send.call(socket, data);
             } else if (stringHexArray.startsWith(Signatures.connectStarts) && stringHexArray.endsWith(Signatures.connectEnds)) {
                 console.debug("%c => ", "background:#7F7;color:#000", "Connecting to game.", this.hexArrayToString(hexArray));
